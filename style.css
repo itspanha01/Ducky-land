@@ -141,8 +141,92 @@ img {
   color: var(--text-white);
 }
 
+/* ── Modal ────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--modal-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease-in;
+}
+
+.modal-overlay.is-visible {
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 300ms ease-out;
+}
+
+.modal-card {
+  background: rgba(15, 23, 42, 0.92);
+  border: 2px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 32px 28px;
+  text-align: center;
+  color: var(--text-white);
+  max-width: 320px;
+  width: 90%;
+  transform: scale(0.92);
+  transition: transform 200ms ease-in;
+}
+
+.modal-overlay.is-visible .modal-card {
+  transform: scale(1);
+  transition: transform 300ms ease-out;
+}
+
+.modal-card__heading {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.modal-card__input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: white;
+  font-size: 15px;
+  font-family: 'Nunito', sans-serif;
+  margin-bottom: 16px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.modal-card__input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.modal-card__btn {
+  width: 100%;
+  background: var(--water);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Fredoka', sans-serif;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.modal-card__btn:hover {
+  background: var(--water-deep);
+}
+
 /* ── Reduced motion ───────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .pond { animation: none; }
   .counter__toggle { transition: none; }
+  .modal-overlay, .modal-card { transition: none; }
 }
