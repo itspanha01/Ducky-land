@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ducky Land</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Pond: full-viewport pixel water -->
+  <div class="pond" id="pond">
+    <div class="duck-zone" id="duckZone"></div>
+  </div>
+
+  <!-- Counter widget: top-right overlay -->
+  <div class="counter" id="counter">
+    <div class="counter__label">Together</div>
+    <div class="counter__number" id="counterNumber">—</div>
+    <div class="counter__unit" id="counterUnit"></div>
+    <button class="counter__toggle" id="toggleBtn">Days ↔ Months</button>
+    <button class="counter__edit" id="editBtn">✏ Edit</button>
+  </div>
+
+  <!-- Date modal: first-visit overlay -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card">
+      <h2 class="modal-card__heading">When did your story begin? 🐥</h2>
+      <input type="date" class="modal-card__input" id="dateInput">
+      <button class="modal-card__btn" id="saveBtn">Start our story</button>
+    </div>
+  </div>
+
+  <script src="logic.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
