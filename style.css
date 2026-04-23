@@ -68,6 +68,28 @@ img {
   pointer-events: none;
 }
 
+/* ── Duck ─────────────────────────────────── */
+.duck-wrapper {
+  position: absolute;
+  animation: swim linear infinite;
+}
+
+.duck {
+  width: 64px;
+  height: 64px;
+  animation: bob ease-in-out 2s infinite;
+}
+
+@keyframes swim {
+  from { transform: translateX(110vw); }
+  to   { transform: translateX(-110vw); }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
 /* ── Counter widget ───────────────────────── */
 .counter {
   position: fixed;
@@ -229,4 +251,6 @@ img {
   .pond { animation: none; }
   .counter__toggle { transition: none; }
   .modal-overlay, .modal-card { transition: none; }
+  .duck-wrapper { animation: none; }
+  .duck         { animation: none; }
 }
