@@ -254,3 +254,22 @@ img {
   .duck-wrapper { animation: none; }
   .duck         { animation: none; }
 }
+
+/* ── Responsive: small screens ────────────── */
+@media (max-width: 374px) {
+  .counter {
+    min-width: 120px;
+    padding: 10px 12px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .counter__number {
+    font-size: 28px;
+  }
+
+  .duck {
+    width: 48px;
+    height: 48px;
+  }
+}
