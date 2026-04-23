@@ -68,7 +68,81 @@ img {
   pointer-events: none;
 }
 
+/* ── Counter widget ───────────────────────── */
+.counter {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: var(--text-white);
+  text-align: center;
+  min-width: 150px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  z-index: 10;
+}
+
+.counter__label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.counter__number {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.counter__unit {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+  min-height: 18px;
+}
+
+.counter__toggle {
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: white;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  margin-bottom: 8px;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.counter__toggle:active {
+  transform: scale(0.95);
+}
+
+.counter__edit {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 11px;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  padding: 2px 4px;
+}
+
+.counter__edit:hover {
+  color: var(--text-white);
+}
+
 /* ── Reduced motion ───────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .pond { animation: none; }
+  .counter__toggle { transition: none; }
 }
