@@ -33,9 +33,42 @@ function hideModal() {
   overlay.setAttribute('aria-hidden', 'true');
 }
 
+function clearDucks() {
+  document.getElementById('duckZone').innerHTML = '';
+}
+
+function spawnDucks(startDateStr) {
+  clearDucks();
+  var count = getDuckCount(startDateStr);
+  var zone = document.getElementById('duckZone');
+
+  for (var i = 0; i < count; i++) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'duck-wrapper';
+
+    var topPct = 15 + Math.random() * 60;        // 15–75% from top
+    var duration = 8 + Math.random() * 6;         // 8–14s per crossing
+    var swimDelay = -(Math.random() * duration);  // negative = mid-swim on load
+    var bobDelay = -(Math.random() * 2);          // stagger the bob
+
+    wrapper.style.top = topPct + '%';
+    wrapper.style.animationDuration = duration + 's';
+    wrapper.style.animationDelay = swimDelay + 's';
+
+    var img = document.createElement('img');
+    img.src = 'image.png';
+    img.alt = 'duck';
+    img.className = 'duck';
+    img.style.animationDelay = bobDelay + 's';
+
+    wrapper.appendChild(img);
+    zone.appendChild(wrapper);
+  }
+}
+
 function startApp(startDateStr) {
-  // Placeholder — implemented in Tasks 9 and 10
-  console.log('startApp called with', startDateStr);
+  spawnDucks(startDateStr);
+  // updateCounter added in Task 10
 }
 
 function init() {
