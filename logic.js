@@ -22,8 +22,15 @@ function calcMonths(startDateStr) {
 function calcLeftoverDays(startDateStr) {
   var start = new Date(startDateStr);
   var months = calcMonths(startDateStr);
-  var afterMonths = new Date(start);
-  afterMonths.setMonth(afterMonths.getMonth() + months);
+  var y = start.getFullYear();
+  var m = start.getMonth() + months;
+  // Advance year if months overflows 12
+  y += Math.floor(m / 12);
+  m = m % 12;
+  // Clamp day to last day of target month to prevent setMonth overflow
+  var maxDay = new Date(y, m + 1, 0).getDate();
+  var day = Math.min(start.getDate(), maxDay);
+  var afterMonths = new Date(y, m, day);
   afterMonths.setHours(0, 0, 0, 0);
   var today = new Date();
   today.setHours(0, 0, 0, 0);

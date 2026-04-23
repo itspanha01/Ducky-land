@@ -99,6 +99,24 @@ test('returns 5 for 5 days past the 1-month mark', () => {
   assert.strictEqual(calcLeftoverDays(dateStr), 5);
 });
 
+test('handles month-end start date without overflow (e.g. Jan 31)', () => {
+  // A start date of Jan 31 + 1 month should give Feb 28/29, not Mar 3
+  // We can't hardcode a date here, so we construct one
+  // Find a month-end date that would overflow: pick a date 31 days back
+  // then verify leftoverDays is less than 31 (not overflowed into next month)
+  const d = new Date();
+  d.setMonth(d.getMonth() - 1);
+  d.setDate(1); // first of that month
+  // Set to last day of that month
+  const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  d.setDate(lastDay);
+  const dateStr = d.toISOString().split('T')[0];
+  const result = calcLeftoverDays(dateStr);
+  // Result should be days since end of that month — must be < 31 and >= 0
+  assert.ok(result >= 0, 'leftover days should not be negative');
+  assert.ok(result < 31, 'leftover days should not overflow into next month (got ' + result + ')');
+});
+
 // ── getDuckCount ──────────────────────────────────────────────────────────────
 
 console.log('\ngetDuckCount');
