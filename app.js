@@ -66,9 +66,44 @@ function spawnDucks(startDateStr) {
   }
 }
 
+function updateCounter(startDateStr) {
+  var numEl  = document.getElementById('counterNumber');
+  var unitEl = document.getElementById('counterUnit');
+  var totalDays = calcTotalDays(startDateStr);
+
+  if (totalDays <= 0) {
+    numEl.textContent  = 'Day 1';
+    unitEl.textContent = '';
+    return;
+  }
+
+  if (mode === 'days') {
+    numEl.textContent  = totalDays;
+    unitEl.textContent = totalDays === 1 ? 'day' : 'days';
+    return;
+  }
+
+  // months mode (default)
+  var months   = calcMonths(startDateStr);
+  var leftover = calcLeftoverDays(startDateStr);
+
+  if (months === 0) {
+    numEl.textContent  = totalDays;
+    unitEl.textContent = totalDays === 1 ? 'day' : 'days';
+  } else {
+    numEl.textContent  = months;
+    unitEl.textContent = (months === 1 ? 'month' : 'months') +
+                         ', ' + leftover + ' ' + (leftover === 1 ? 'day' : 'days');
+  }
+}
+
 function startApp(startDateStr) {
   spawnDucks(startDateStr);
-  // updateCounter added in Task 10
+  updateCounter(startDateStr);
+  if (counterInterval) clearInterval(counterInterval);
+  counterInterval = setInterval(function () {
+    updateCounter(loadStartDate());
+  }, 60000);
 }
 
 function init() {
