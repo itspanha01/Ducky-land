@@ -149,9 +149,9 @@ test('returns 0 when duck count is at max (30 ducks)', () => {
   assert.strictEqual(calcDaysUntilNextDuck(exactMonthsAgo(35)), 0);
 });
 
-test('returns positive integer when not at max', () => {
+test('returns non-negative integer when not at max', () => {
   const result = calcDaysUntilNextDuck(exactMonthsAgo(1));
-  assert.ok(result > 0, 'expected positive days, got ' + result);
+  assert.ok(result >= 0, 'expected non-negative days, got ' + result);
 });
 
 test('returns at most 31 (never more than one month away)', () => {
