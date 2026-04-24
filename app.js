@@ -8,6 +8,12 @@ var counterInterval  = null;
 var flipIntervals    = [];
 var openEditor       = null;
 
+var QUACK_SOUNDS = ['Duck 1.mp3', 'Duck 2.mp3', 'Duck 3.mp3', 'Duck 4.mp3'].map(function (src) {
+  var a = new Audio(src);
+  a.volume = 0.6;
+  return a;
+});
+
 function loadStartDate() {
   return localStorage.getItem(STORAGE_KEY);
 }
@@ -167,6 +173,9 @@ function spawnDucks(startDateStr) {
         clearTimeout(clickTimer);
         clickTimer = setTimeout(function () {
           showQuack(wrapper);
+          var snd = QUACK_SOUNDS[Math.floor(Math.random() * QUACK_SOUNDS.length)];
+          snd.currentTime = 0;
+          snd.play();
           wrapper.style.animationPlayState = 'paused';
           img.style.animationPlayState = 'paused';
           setTimeout(function () {
