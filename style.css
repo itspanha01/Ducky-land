@@ -543,6 +543,28 @@ img {
   }
 }
 
+/* ── Music button ────────────────────────────── */
+.music-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 150ms;
+}
+
+.music-btn:hover { opacity: 0.85; }
+
 /* ── Dashboard floating button ───────────────── */
 .dashboard-btn {
   position: fixed;

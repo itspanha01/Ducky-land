@@ -391,3 +391,25 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// ── Background music ───────────────────────────────────────────────────────
+(function () {
+  var audio   = document.getElementById('bgMusic');
+  var btn     = document.getElementById('musicBtn');
+  var playing = false;
+
+  audio.volume = 0.4;
+
+  btn.addEventListener('click', function () {
+    if (playing) {
+      audio.pause();
+      btn.textContent = '🔇';
+      btn.setAttribute('aria-label', 'Play music');
+    } else {
+      audio.play();
+      btn.textContent = '🔊';
+      btn.setAttribute('aria-label', 'Mute music');
+    }
+    playing = !playing;
+  });
+}());

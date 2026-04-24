@@ -9,7 +9,8 @@
       "Bash(node tests/logic.test.js)",
       "Bash(echo \"Exit code: $?\")",
       "Bash(node -e ' *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(git show *)"
     ]
   }
 }
