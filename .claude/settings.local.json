@@ -10,7 +10,8 @@
       "Bash(echo \"Exit code: $?\")",
       "Bash(node -e ' *)",
       "Bash(node *)",
-      "Bash(git show *)"
+      "Bash(git show *)",
+      "Bash(git *)"
     ]
   }
 }

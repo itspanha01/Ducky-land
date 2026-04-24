@@ -24,12 +24,20 @@
     <div class="lily-pad" style="bottom:62%;right:40%"><div class="lily-flower"></div></div>
     <div class="lily-pad lily-pad--sm" style="bottom:42%;left:46%"></div>
     <div class="lily-pad lily-pad--lg" style="bottom:25%;right:38%"><div class="lily-flower"></div></div>
+    <div class="lily-pad lily-pad--sm" style="bottom:10%;left:32%"></div>
+    <div class="lily-pad" style="bottom:88%;left:20%"><div class="lily-flower"></div></div>
+    <div class="lily-pad lily-pad--sm" style="bottom:46%;left:76%"></div>
+    <div class="lily-pad lily-pad--lg" style="bottom:68%;right:8%"><div class="lily-flower"></div></div>
+    <div class="lily-pad lily-pad--sm" style="bottom:14%;right:48%"></div>
 
     <!-- Floating leaves -->
     <div class="pond-leaf" style="bottom:38%;left:28%"></div>
     <div class="pond-leaf pond-leaf--sm" style="bottom:67%;right:16%"></div>
     <div class="pond-leaf" style="bottom:20%;right:55%"></div>
     <div class="pond-leaf pond-leaf--sm" style="bottom:82%;left:70%"></div>
+    <div class="pond-leaf" style="bottom:58%;left:86%"></div>
+    <div class="pond-leaf pond-leaf--sm" style="bottom:22%;left:60%"></div>
+    <div class="pond-leaf" style="bottom:75%;right:32%"></div>
 
     <!-- Reed clusters -->
     <div class="reed-cluster" style="bottom:0;left:3%">
@@ -46,39 +54,38 @@
       <div class="reed" style="height:72px;left:0"></div>
       <div class="reed" style="height:88px;left:11px"></div>
     </div>
+    <div class="reed-cluster" style="bottom:0;left:22%">
+      <div class="reed" style="height:68px;left:0"></div>
+      <div class="reed" style="height:90px;left:11px"></div>
+      <div class="reed" style="height:58px;left:22px"></div>
+    </div>
+    <div class="reed-cluster" style="bottom:0;right:26%">
+      <div class="reed" style="height:78px;left:0"></div>
+      <div class="reed" style="height:55px;left:12px"></div>
+      <div class="reed" style="height:95px;left:22px"></div>
+    </div>
 
-    <!-- Wave layer 1: foreground, fastest -->
-    <svg class="pond-waves wave--1" viewBox="0 0 2880 80" preserveAspectRatio="none" aria-hidden="true">
-      <path fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="2"
-        d="M0,40 C45,22 135,22 180,40 C225,58 315,58 360,40
-           C405,22 495,22 540,40 C585,58 675,58 720,40
-           C765,22 855,22 900,40 C945,58 1035,58 1080,40
-           C1125,22 1215,22 1260,40 C1305,58 1395,58 1440,40
-           C1485,22 1575,22 1620,40 C1665,58 1755,58 1800,40
-           C1845,22 1935,22 1980,40 C2025,58 2115,58 2160,40
-           C2205,22 2295,22 2340,40 C2385,58 2475,58 2520,40
-           C2565,22 2655,22 2700,40 C2745,58 2835,58 2880,40"/>
-    </svg>
-
-    <!-- Wave layer 2: mid, medium speed -->
-    <svg class="pond-waves wave--2" viewBox="0 0 2880 60" preserveAspectRatio="none" aria-hidden="true">
-      <path fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"
-        d="M0,30 C60,18 180,18 240,30 C300,42 420,42 480,30
-           C540,18 660,18 720,30 C780,42 900,42 960,30
-           C1020,18 1140,18 1200,30 C1260,42 1380,42 1440,30
-           C1500,18 1620,18 1680,30 C1740,42 1860,42 1920,30
-           C1980,18 2100,18 2160,30 C2220,42 2340,42 2400,30
-           C2460,18 2580,18 2640,30 C2700,42 2820,42 2880,30"/>
-    </svg>
-
-    <!-- Wave layer 3: background, slowest -->
-    <svg class="pond-waves wave--3" viewBox="0 0 2880 50" preserveAspectRatio="none" aria-hidden="true">
-      <path fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"
-        d="M0,25 C90,18 270,18 360,25 C450,32 630,32 720,25
-           C810,18 990,18 1080,25 C1170,32 1350,32 1440,25
-           C1530,18 1710,18 1800,25 C1890,32 2070,32 2160,25
-           C2250,18 2430,18 2520,25 C2610,32 2790,32 2880,25"/>
-    </svg>
+    <!-- Underwater plants -->
+    <div class="plant-cluster" style="bottom:0;left:35%">
+      <div class="underwater-plant" style="height:75px;left:0;animation-delay:-1.2s"></div>
+      <div class="underwater-plant" style="height:105px;left:14px;animation-delay:-2.8s"></div>
+      <div class="underwater-plant" style="height:60px;left:26px;animation-delay:-0.5s"></div>
+      <div class="underwater-plant" style="height:90px;left:38px;animation-delay:-3.5s"></div>
+    </div>
+    <div class="plant-cluster" style="bottom:0;left:62%">
+      <div class="underwater-plant" style="height:85px;left:0;animation-delay:-2s"></div>
+      <div class="underwater-plant" style="height:65px;left:14px;animation-delay:-0.8s"></div>
+      <div class="underwater-plant" style="height:110px;left:26px;animation-delay:-3s"></div>
+    </div>
+    <div class="plant-cluster" style="bottom:0;left:14%">
+      <div class="underwater-plant" style="height:70px;left:0;animation-delay:-1.8s"></div>
+      <div class="underwater-plant" style="height:95px;left:14px;animation-delay:-3.2s"></div>
+    </div>
+    <div class="plant-cluster" style="bottom:0;right:18%">
+      <div class="underwater-plant" style="height:80px;left:0;animation-delay:-0.4s"></div>
+      <div class="underwater-plant" style="height:55px;left:14px;animation-delay:-2.2s"></div>
+      <div class="underwater-plant" style="height:100px;left:26px;animation-delay:-1s"></div>
+    </div>
 
     <div class="duck-zone" id="duckZone"></div>
   </div>
@@ -133,11 +140,21 @@
     </div>
   </div>
 
+  <!-- Falling leaves canvas -->
+  <div class="leaves-container" id="leavesContainer" aria-hidden="true"></div>
+
+  <!-- Fireflies canvas (night mode) -->
+  <div class="fireflies-container" id="firefliesContainer" aria-hidden="true"></div>
+
+  <!-- Fish bubbles canvas -->
+  <div class="bubbles-container" id="bubblesContainer" aria-hidden="true"></div>
+
   <!-- Floating dashboard trigger -->
   <button class="dashboard-btn" id="dashboardBtn" aria-label="Open stats dashboard">🦆</button>
 
   <!-- Background music -->
   <audio id="bgMusic" loop src="The Bridge - Sad &amp; Beautiful Piano Song &amp; Violin BigRicePiano.mp3"></audio>
+  <button class="nightmode-btn" id="nightModeBtn" aria-label="Switch to night mode">🌙</button>
   <button class="music-btn" id="musicBtn" aria-label="Play music">🔇</button>
 
   <script src="logic.js"></script>

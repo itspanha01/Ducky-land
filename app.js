@@ -401,6 +401,123 @@ function init() {
 
 document.addEventListener('DOMContentLoaded', init);
 
+// ── Day / Night + leaves / fireflies ──────────────────────────────────────
+(function () {
+  var noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var isNight       = localStorage.getItem('ducky-night') === 'true';
+  var leafContainer = document.getElementById('leavesContainer');
+  var ffContainer   = document.getElementById('firefliesContainer');
+  var btn           = document.getElementById('nightModeBtn');
+
+  var LEAF_COLORS = ['#c8a030', '#d4672a', '#b03a1a', '#e8c048', '#8c9a30', '#c05828'];
+
+  // ── Leaves ─────────────────────────────────────
+  function spawnLeaf() {
+    if (isNight) return;
+    var leaf = document.createElement('div');
+    leaf.className = 'leaf';
+    var size = 10 + Math.random() * 14;
+    leaf.style.width           = size + 'px';
+    leaf.style.height          = (size * 0.65) + 'px';
+    leaf.style.left            = (Math.random() * 100) + 'vw';
+    leaf.style.backgroundColor = LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)];
+    leaf.style.animation       = 'leaf-fall ' + (12 + Math.random() * 8) + 's linear forwards';
+    leafContainer.appendChild(leaf);
+    leaf.addEventListener('animationend', function () { leaf.remove(); });
+  }
+
+  function scheduleLeaf() {
+    if (isNight) return;
+    setTimeout(function () { spawnLeaf(); scheduleLeaf(); }, 600 + Math.random() * 1000);
+  }
+
+  // ── Fireflies ───────────────────────────────────
+  function spawnFirefly() {
+    if (!isNight) return;
+    var f = document.createElement('div');
+    f.className    = 'firefly';
+    var size       = 3 + Math.random() * 4;
+    f.style.width  = size + 'px';
+    f.style.height = size + 'px';
+    f.style.left   = (5 + Math.random() * 90) + 'vw';
+    f.style.top    = (10 + Math.random() * 78) + 'vh';
+    var floatDur   = (5 + Math.random() * 6) + 's';
+    var glowDur    = (1 + Math.random() * 1.5) + 's';
+    f.style.animation = 'firefly-float ' + floatDur + ' ease-in-out forwards, '
+                      + 'firefly-glow '  + glowDur  + ' ease-in-out infinite';
+    ffContainer.appendChild(f);
+    f.addEventListener('animationend', function (e) {
+      if (e.animationName === 'firefly-float') f.remove();
+    });
+  }
+
+  function scheduleFirefly() {
+    if (!isNight) return;
+    setTimeout(function () { spawnFirefly(); scheduleFirefly(); }, 300 + Math.random() * 700);
+  }
+
+  // ── Apply mode ──────────────────────────────────
+  function applyMode() {
+    document.body.classList.toggle('night-mode', isNight);
+    btn.textContent = isNight ? '☀️' : '🌙';
+    btn.setAttribute('aria-label', isNight ? 'Switch to day mode' : 'Switch to night mode');
+
+    leafContainer.innerHTML = '';
+    ffContainer.innerHTML   = '';
+
+    if (noMotion) return;
+
+    if (isNight) {
+      for (var i = 0; i < 10; i++) (function (j) { setTimeout(spawnFirefly, j * 180); })(i);
+      scheduleFirefly();
+    } else {
+      for (var i = 0; i < 6; i++) (function (j) { setTimeout(spawnLeaf, j * 400); })(i);
+      scheduleLeaf();
+    }
+  }
+
+  btn.addEventListener('click', function () {
+    isNight = !isNight;
+    localStorage.setItem('ducky-night', isNight);
+    applyMode();
+  });
+
+  applyMode();
+}());
+
+// ── Fish bubbles ───────────────────────────────────────────────────────────
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var container = document.getElementById('bubblesContainer');
+
+  function spawnBubble() {
+    var b = document.createElement('div');
+    b.className = 'bubble';
+
+    var size = 4 + Math.random() * 9;
+    b.style.width    = size + 'px';
+    b.style.height   = size + 'px';
+    b.style.left     = (2 + Math.random() * 96) + 'vw';
+    b.style.bottom   = (Math.random() * 15) + 'vh';
+    b.style.animationName           = 'bubble-rise';
+    b.style.animationDuration       = (9 + Math.random() * 9) + 's';
+    b.style.animationTimingFunction = 'linear';
+    b.style.animationFillMode       = 'forwards';
+
+    container.appendChild(b);
+    b.addEventListener('animationend', function () { b.remove(); });
+  }
+
+  function scheduleNext() {
+    setTimeout(function () { spawnBubble(); scheduleNext(); }, 1000 + Math.random() * 1800);
+  }
+
+  for (var i = 0; i < 5; i++) setTimeout(spawnBubble, i * 700);
+  scheduleNext();
+}());
+
 // ── Background music ───────────────────────────────────────────────────────
 (function () {
   var audio   = document.getElementById('bgMusic');

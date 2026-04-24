@@ -47,35 +47,6 @@ img {
     );
 }
 
-/* ── SVG wave layers ──────────────────────── */
-.pond-waves {
-  position: absolute;
-  width: 200%;
-  pointer-events: none;
-  z-index: 1;
-  overflow: visible;
-}
-
-.wave--1 {
-  top: 20%;
-  height: 80px;
-  animation: wave-scroll 8s linear infinite;
-}
-.wave--2 {
-  top: 45%;
-  height: 60px;
-  animation: wave-scroll 13s linear infinite;
-}
-.wave--3 {
-  top: 68%;
-  height: 50px;
-  animation: wave-scroll 18s linear infinite;
-}
-
-@keyframes wave-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
 
 /* ── Lily pads ────────────────────────────── */
 .lily-pad {
@@ -85,18 +56,19 @@ img {
   background: var(--lily-green);
   border-radius: 50% 50% 50% 0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-  animation: sway 4s ease-in-out infinite alternate;
+  z-index: 2;
+  animation: lily-float 6s ease-in-out infinite;
 }
 .lily-pad--sm {
   width: 36px;
   height: 22px;
-  animation-duration: 5.5s;
+  animation-duration: 5s;
   animation-delay: -1.5s;
 }
 .lily-pad--lg {
   width: 68px;
   height: 42px;
-  animation-duration: 6s;
+  animation-duration: 7.5s;
   animation-delay: -3s;
 }
 .lily-pad:nth-child(odd)  { animation-delay: -2s; }
@@ -121,6 +93,7 @@ img {
   background: rgba(40, 140, 75, 0.48);
   border-radius: 50%;
   transform: rotate(-20deg);
+  z-index: 2;
   animation: sway 7s ease-in-out infinite alternate;
   animation-delay: -3s;
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
@@ -135,6 +108,7 @@ img {
 /* ── Reeds ────────────────────────────────── */
 .reed-cluster {
   position: absolute;
+  z-index: 2;
 }
 .reed {
   position: absolute;
@@ -160,11 +134,21 @@ img {
   to   { transform: rotate( 3deg); }
 }
 
+@keyframes lily-float {
+  0%   { transform: rotate(-1deg) translate(  0px,  0px); }
+  20%  { transform: rotate(-2deg) translate( -5px, -2px); }
+  45%  { transform: rotate( 1deg) translate( -1px, -1px); }
+  65%  { transform: rotate( 2deg) translate(  3px, -2px); }
+  85%  { transform: rotate( 0deg) translate(  4px, -1px); }
+  100% { transform: rotate(-1deg) translate(  0px,  0px); }
+}
+
 /* ── Duck zone ────────────────────────────── */
 .duck-zone {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 3;
 }
 
 /* ── Duck ─────────────────────────────────── */
@@ -527,11 +511,10 @@ img {
 /* ── Reduced motion ───────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .pond         { animation: none; }
-  .lily-pad     { animation: none; }
+  .lily-pad,
+  .lily-pad--sm,
+  .lily-pad--lg { animation: none; }
   .pond-leaf    { animation: none; }
-  .wave--1,
-  .wave--2,
-  .wave--3      { animation: none; }
   .duck-wrapper { animation: none; }
   .duck-flip    { transition: none; }
   .duck         { animation: none; }
@@ -544,6 +527,10 @@ img {
   .modal-card   { transition: none; }
   .dashboard-btn { animation: none; }
   .dashboard    { transition: none; }
+  .leaf              { animation: none; }
+  .bubble            { animation: none; }
+  .underwater-plant  { animation: none; }
+  .firefly           { animation: none; opacity: 0.7; }
 }
 
 /* ── Responsive: small screens ────────────── */
@@ -563,6 +550,142 @@ img {
     width: 48px;
     height: 48px;
   }
+}
+
+/* ── Night mode ──────────────────────────────── */
+body.night-mode {
+  --water:      #1a3f6a;
+  --water-mid:  #0d2545;
+  --water-deep: #050f20;
+}
+
+body.night-mode .pond {
+  background:
+    linear-gradient(180deg, rgba(80,110,180,0.10) 0%, transparent 22%),
+    linear-gradient(
+      180deg,
+      var(--water)      0%,
+      var(--water-mid)  40%,
+      var(--water-deep) 70%,
+      var(--water-mid)  100%
+    );
+  filter: brightness(0.45);
+}
+
+body.night-mode .bubbles-container {
+  opacity: 0.5;
+}
+
+/* ── Fireflies ───────────────────────────────── */
+.fireflies-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.firefly {
+  position: absolute;
+  border-radius: 50%;
+  background: #d8ff70;
+}
+
+@keyframes firefly-float {
+  0%   { transform: translate(0,    0);     opacity: 0;   }
+  12%  { opacity: 1; }
+  30%  { transform: translate( 18px, -14px); }
+  55%  { transform: translate(-12px, -28px); }
+  78%  { transform: translate( 16px, -20px); }
+  90%  { opacity: 0.8; }
+  100% { transform: translate(  6px, -38px); opacity: 0;   }
+}
+
+@keyframes firefly-glow {
+  0%, 100% { box-shadow: 0 0 3px 1px rgba(200,255,80,0.35); }
+  50%       { box-shadow: 0 0 14px 7px rgba(200,255,80,0.95), 0 0 36px 14px rgba(200,255,80,0.28); }
+}
+
+/* ── Night mode toggle button ────────────────── */
+.nightmode-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 74px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 150ms;
+}
+
+.nightmode-btn:hover { opacity: 0.85; }
+
+/* ── Underwater plants ───────────────────────── */
+.plant-cluster {
+  position: absolute;
+  z-index: 2;
+}
+
+.underwater-plant {
+  position: absolute;
+  bottom: 0;
+  width: 7px;
+  background: linear-gradient(180deg, rgba(38,130,65,0.60) 0%, rgba(22,80,40,0.35) 100%);
+  border-radius: 4px 4px 0 0;
+  transform-origin: bottom center;
+  animation: sway 3.5s ease-in-out infinite alternate;
+}
+
+/* ── Fish bubbles ────────────────────────────── */
+.bubbles-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.50);
+  background: rgba(255,255,255,0.07);
+}
+
+@keyframes bubble-rise {
+  0%   { transform: translateY(0);    opacity: 0;    }
+  8%   { opacity: 0.7; }
+  88%  { opacity: 0.4; }
+  100% { transform: translateY(-50vh); opacity: 0;   }
+}
+
+/* ── Falling leaves ──────────────────────────── */
+.leaves-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.leaf {
+  position: absolute;
+  top: -30px;
+  border-radius: 0 100% 0 100%;
+  opacity: 0.88;
+}
+
+@keyframes leaf-fall {
+  0%   { transform: translateY(0)     rotate(0deg);   opacity: 0.85; }
+  100% { transform: translateY(112vh) rotate(120deg); opacity: 0; }
 }
 
 /* ── Music button ────────────────────────────── */
@@ -671,6 +794,11 @@ img {
   overflow-y: auto;
   padding: 16px 20px 24px;
   flex: 1;
+  scrollbar-width: none;
+}
+
+.dashboard__content::-webkit-scrollbar {
+  display: none;
 }
 
 .dashboard__stats-grid {
