@@ -160,20 +160,33 @@ function spawnDucks(startDateStr) {
         setTimeout(commitName, 150);
       });
 
-      // ── Duck click: name first, then quack ────────
+      // ── Duck single click: quack + pause ──────────
+      var clickTimer = null;
       img.addEventListener('click', function (e) {
         e.stopPropagation();
-        if (!currentName) {
-          openNameEditor();
-        } else {
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(function () {
           showQuack(wrapper);
-        }
+          wrapper.style.animationPlayState = 'paused';
+          img.style.animationPlayState = 'paused';
+          setTimeout(function () {
+            wrapper.style.animationPlayState = '';
+            img.style.animationPlayState = '';
+          }, 1200);
+        }, 220);
+      });
+
+      // ── Duck double click: open name editor ────────
+      img.addEventListener('dblclick', function (e) {
+        e.stopPropagation();
+        clearTimeout(clickTimer);
+        openNameEditor(e);
       });
 
       // ── Badge click: always opens editor ──────────
       badge.addEventListener('click', function (e) {
         e.stopPropagation();
-        openNameEditor();
+        openNameEditor(e);
       });
 
       // ── Staggered fade-in ──────────────────────────
