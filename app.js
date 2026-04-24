@@ -265,6 +265,7 @@ function renderDashboard() {
 }
 
 function openDashboard() {
+  if (!loadStartDate()) return;
   renderDashboard();
   var panel = document.getElementById('dashboard');
   panel.classList.add('is-open');
