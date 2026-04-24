@@ -520,6 +520,8 @@ img {
   .counter__number { animation: none !important; }
   .modal-overlay,
   .modal-card   { transition: none; }
+  .dashboard-btn { animation: none; }
+  .dashboard    { transition: none; }
 }
 
 /* ── Responsive: small screens ────────────── */
