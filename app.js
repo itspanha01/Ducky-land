@@ -218,6 +218,65 @@ function spawnDucks(startDateStr) {
   }
 }
 
+function renderDashboard() {
+  var startDateStr = loadStartDate();
+  if (!startDateStr) return;
+
+  var totalDays     = calcTotalDays(startDateStr);
+  var months        = calcMonths(startDateStr);
+  var leftover      = calcLeftoverDays(startDateStr);
+  var duckCount     = getDuckCount(startDateStr);
+  var daysUntilNext = calcDaysUntilNextDuck(startDateStr);
+  var names         = loadNames();
+
+  document.getElementById('dashStat-days').textContent = totalDays;
+
+  var monthsText;
+  if (months === 0) {
+    monthsText = totalDays + (totalDays === 1 ? ' day' : ' days');
+  } else {
+    monthsText = months + (months === 1 ? ' month' : ' months') +
+                 ', ' + leftover + (leftover === 1 ? ' day' : ' days');
+  }
+  document.getElementById('dashStat-months').textContent = monthsText;
+
+  document.getElementById('dashStat-ducks').textContent = duckCount;
+
+  var nextEl = document.getElementById('dashStat-next');
+  if (duckCount >= 30) {
+    nextEl.textContent = 'Max ducks! 🎉';
+  } else {
+    nextEl.textContent = daysUntilNext + (daysUntilNext === 1 ? ' day' : ' days');
+  }
+
+  var namedCount = 0;
+  var listEl = document.getElementById('dashStat-duck-list');
+  listEl.innerHTML = '';
+  for (var i = 0; i < duckCount; i++) {
+    var name = names[i] || '';
+    if (name) namedCount++;
+    var item = document.createElement('div');
+    item.className = 'dashboard__duck-item' + (name ? '' : ' dashboard__duck-item--unnamed');
+    item.textContent = name || ('Duck #' + (i + 1));
+    listEl.appendChild(item);
+  }
+  document.getElementById('dashStat-named-header').textContent =
+    namedCount + ' of ' + duckCount + ' ducks named';
+}
+
+function openDashboard() {
+  renderDashboard();
+  var panel = document.getElementById('dashboard');
+  panel.classList.add('is-open');
+  panel.setAttribute('aria-hidden', 'false');
+}
+
+function closeDashboard() {
+  var panel = document.getElementById('dashboard');
+  panel.classList.remove('is-open');
+  panel.setAttribute('aria-hidden', 'true');
+}
+
 var lastCounterNum = null;
 
 function popCounter() {
@@ -301,10 +360,26 @@ function init() {
     if (saved) { lastCounterNum = null; updateCounter(saved); }
   });
 
-  document.getElementById('pond').addEventListener('click', closeOpenEditor);
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeOpenEditor();
+  document.getElementById('pond').addEventListener('click', function () {
+    closeOpenEditor();
+    closeDashboard();
   });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      closeOpenEditor();
+      closeDashboard();
+    }
+  });
+
+  document.getElementById('dashboardBtn').addEventListener('click', function () {
+    var panel = document.getElementById('dashboard');
+    if (panel.classList.contains('is-open')) {
+      closeDashboard();
+    } else {
+      openDashboard();
+    }
+  });
+  document.getElementById('dashboardClose').addEventListener('click', closeDashboard);
 
   var startDateStr = loadStartDate();
   if (startDateStr) {
