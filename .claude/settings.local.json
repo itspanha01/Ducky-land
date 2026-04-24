@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "Bash(bash *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git commit *)",
+      "Bash(node tests/logic.test.js)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(node -e ' *)",
+      "Bash(node *)"
+    ]
+  }
+}

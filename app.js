@@ -1,9 +1,12 @@
 // Ducky Land — app logic and DOM wiring
 'use strict';
 
-var STORAGE_KEY = 'ducky-start-date';
-var mode = 'months'; // 'months' | 'days'
-var counterInterval = null;
+var STORAGE_KEY      = 'ducky-start-date';
+var NAMES_KEY        = 'ducky-names';
+var mode             = 'months'; // 'months' | 'days'
+var counterInterval  = null;
+var flipIntervals    = [];
+var openEditor       = null;
 
 function loadStartDate() {
   return localStorage.getItem(STORAGE_KEY);
@@ -13,18 +16,24 @@ function saveStartDate(dateStr) {
   localStorage.setItem(STORAGE_KEY, dateStr);
 }
 
+function loadNames() {
+  try { return JSON.parse(localStorage.getItem(NAMES_KEY) || '[]'); }
+  catch (e) { return []; }
+}
+
+function saveName(index, name) {
+  var names = loadNames();
+  names[index] = name;
+  localStorage.setItem(NAMES_KEY, JSON.stringify(names));
+}
+
 function showModal() {
   var overlay = document.getElementById('modalOverlay');
   var saved = loadStartDate();
-  if (saved) {
-    document.getElementById('dateInput').value = saved;
-  }
+  if (saved) document.getElementById('dateInput').value = saved;
   overlay.classList.add('is-visible');
   overlay.setAttribute('aria-hidden', 'false');
-  // Move focus to date input for accessibility
-  setTimeout(function () {
-    document.getElementById('dateInput').focus();
-  }, 50);
+  setTimeout(function () { document.getElementById('dateInput').focus(); }, 50);
 }
 
 function hideModal() {
@@ -34,71 +43,217 @@ function hideModal() {
 }
 
 function clearDucks() {
+  flipIntervals.forEach(clearInterval);
+  flipIntervals = [];
+  openEditor = null;
   document.getElementById('duckZone').innerHTML = '';
+}
+
+function showQuack(wrapper) {
+  var existing = wrapper.querySelector('.quack-bubble');
+  if (existing) existing.remove();
+  var bubble = document.createElement('div');
+  bubble.className = 'quack-bubble';
+  bubble.textContent = 'Quack!';
+  wrapper.appendChild(bubble);
+  bubble.addEventListener('animationend', function () { bubble.remove(); });
+}
+
+function closeOpenEditor() {
+  if (openEditor) {
+    openEditor.classList.remove('open');
+    openEditor = null;
+  }
 }
 
 function spawnDucks(startDateStr) {
   clearDucks();
   var count = getDuckCount(startDateStr);
-  var zone = document.getElementById('duckZone');
+  var names = loadNames();
+  var zone  = document.getElementById('duckZone');
 
   for (var i = 0; i < count; i++) {
-    var wrapper = document.createElement('div');
-    wrapper.className = 'duck-wrapper';
+    (function (index) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'duck-wrapper';
 
-    var topPct = 15 + Math.random() * 60;        // 15–75% from top
-    var duration = 8 + Math.random() * 6;         // 8–14s per crossing
-    var swimDelay = -(Math.random() * duration);  // negative = mid-swim on load
-    var bobDelay = -(Math.random() * 2);          // stagger the bob
+      var topPct    = 15 + Math.random() * 60;
+      var duration  = 20 + Math.random() * 12;
+      var swimDelay = -(Math.random() * duration);
+      var bobDelay  = -(Math.random() * 2.5);
 
-    wrapper.style.top = topPct + '%';
-    wrapper.style.animationDuration = duration + 's';
-    wrapper.style.animationDelay = swimDelay + 's';
+      wrapper.style.top               = topPct + '%';
+      wrapper.style.animationDuration = duration + 's';
+      wrapper.style.animationDelay    = swimDelay + 's';
+      wrapper.style.opacity           = '0';
 
-    var img = document.createElement('img');
-    img.src = 'image.png';
-    img.alt = 'duck';
-    img.className = 'duck';
-    img.style.animationDelay = bobDelay + 's';
+      // Layer 1: flip (scaleX only)
+      var flipDiv = document.createElement('div');
+      flipDiv.className = 'duck-flip';
 
-    wrapper.appendChild(img);
-    zone.appendChild(wrapper);
+      var ripple = document.createElement('div');
+      ripple.className = 'duck-ripple';
+
+      // Layer 2: bob (translateY only)
+      var img = document.createElement('img');
+      img.src = 'image.png';
+      img.alt = 'duck';
+      img.className = 'duck';
+      img.style.animationDelay = bobDelay + 's';
+
+      flipDiv.appendChild(ripple);
+      flipDiv.appendChild(img);
+      wrapper.appendChild(flipDiv);
+
+      // Name badge — visible when named, click opens editor
+      var currentName = names[index] || '';
+      var badge = document.createElement('div');
+      badge.className = 'duck-name-badge';
+      badge.textContent = currentName;
+      badge.style.display = currentName ? 'block' : 'none';
+      wrapper.appendChild(badge);
+
+      // Name editor popup
+      var editor = document.createElement('div');
+      editor.className = 'duck-editor';
+
+      var editorLabel = document.createElement('label');
+      editorLabel.textContent = "Duck's name";
+
+      var editorInput = document.createElement('input');
+      editorInput.type = 'text';
+      editorInput.maxLength = 20;
+      editorInput.placeholder = 'Give me a name…';
+      editorInput.value = currentName;
+
+      editor.appendChild(editorLabel);
+      editor.appendChild(editorInput);
+      wrapper.appendChild(editor);
+      zone.appendChild(wrapper);
+
+      // ── Open / close editor ──────────────────────
+      function openNameEditor(e) {
+        if (e) e.stopPropagation();
+        if (editor.classList.contains('open')) return;
+        closeOpenEditor();
+        editor.classList.add('open');
+        openEditor = editor;
+        setTimeout(function () { editorInput.focus(); editorInput.select(); }, 50);
+      }
+
+      function commitName() {
+        var val = editorInput.value.trim();
+        saveName(index, val);
+        currentName = val;
+        badge.textContent = val;
+        badge.style.display = val ? 'block' : 'none';
+        editor.classList.remove('open');
+        if (openEditor === editor) openEditor = null;
+      }
+
+      editorInput.addEventListener('keydown', function (e) {
+        e.stopPropagation();
+        if (e.key === 'Enter')  commitName();
+        if (e.key === 'Escape') { editor.classList.remove('open'); openEditor = null; }
+      });
+      editorInput.addEventListener('blur', function () {
+        setTimeout(commitName, 150);
+      });
+
+      // ── Duck click: name first, then quack ────────
+      img.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (!currentName) {
+          openNameEditor();
+        } else {
+          showQuack(wrapper);
+        }
+      });
+
+      // ── Badge click: always opens editor ──────────
+      badge.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openNameEditor();
+      });
+
+      // ── Staggered fade-in ──────────────────────────
+      setTimeout(function () {
+        wrapper.style.transition = 'opacity 600ms ease';
+        wrapper.style.opacity = '1';
+      }, index * 100);
+
+      // ── Direction flip: measure actual movement ────
+      // Comparing real screen position every 200ms is simpler and
+      // always correct regardless of animation timing math.
+      var lastX = null;
+      function updateFlip() {
+        var currentX = wrapper.getBoundingClientRect().left;
+        if (lastX !== null) {
+          var delta = currentX - lastX;
+          if (delta < -0.5) {
+            flipDiv.classList.add('flipped');
+          } else if (delta > 0.5) {
+            flipDiv.classList.remove('flipped');
+          }
+        }
+        lastX = currentX;
+      }
+      var id = setInterval(updateFlip, 200);
+      flipIntervals.push(id);
+
+    })(i);
   }
 }
 
+var lastCounterNum = null;
+
+function popCounter() {
+  var numEl = document.getElementById('counterNumber');
+  numEl.classList.remove('pop');
+  void numEl.offsetWidth;
+  numEl.classList.add('pop');
+}
+
 function updateCounter(startDateStr) {
-  var numEl  = document.getElementById('counterNumber');
-  var unitEl = document.getElementById('counterUnit');
+  var numEl     = document.getElementById('counterNumber');
+  var unitEl    = document.getElementById('counterUnit');
+  var btnEl     = document.getElementById('toggleBtn');
   var totalDays = calcTotalDays(startDateStr);
+  var newNum, newUnit;
 
   if (totalDays <= 0) {
-    numEl.textContent  = 'Day 1';
-    unitEl.textContent = '';
-    return;
-  }
-
-  if (mode === 'days') {
-    numEl.textContent  = totalDays;
-    unitEl.textContent = totalDays === 1 ? 'day' : 'days';
-    return;
-  }
-
-  // months mode (default)
-  var months   = calcMonths(startDateStr);
-  var leftover = calcLeftoverDays(startDateStr);
-
-  if (months === 0) {
-    numEl.textContent  = totalDays;
-    unitEl.textContent = totalDays === 1 ? 'day' : 'days';
+    newNum  = 'Day 1';
+    newUnit = '';
+    btnEl.textContent = mode === 'months' ? 'Show days' : 'Show months';
+  } else if (mode === 'days') {
+    newNum  = totalDays;
+    newUnit = totalDays === 1 ? 'day' : 'days';
+    btnEl.textContent = 'Show months';
   } else {
-    numEl.textContent  = months;
-    unitEl.textContent = (months === 1 ? 'month' : 'months') +
-                         ', ' + leftover + ' ' + (leftover === 1 ? 'day' : 'days');
+    var months   = calcMonths(startDateStr);
+    var leftover = calcLeftoverDays(startDateStr);
+    btnEl.textContent = 'Show days';
+    if (months === 0) {
+      newNum  = totalDays;
+      newUnit = totalDays === 1 ? 'day' : 'days';
+    } else {
+      newNum  = months;
+      newUnit = (months === 1 ? 'month' : 'months') +
+                ', ' + leftover + ' ' + (leftover === 1 ? 'day' : 'days');
+    }
+  }
+
+  if (String(newNum) !== String(lastCounterNum)) {
+    numEl.textContent  = newNum;
+    unitEl.textContent = newUnit;
+    popCounter();
+    lastCounterNum = newNum;
   }
 }
 
 function startApp(startDateStr) {
   spawnDucks(startDateStr);
+  lastCounterNum = null;
   updateCounter(startDateStr);
   if (counterInterval) clearInterval(counterInterval);
   counterInterval = setInterval(function () {
@@ -107,19 +262,16 @@ function startApp(startDateStr) {
 }
 
 function init() {
-  // Accessibility: counter live region
   var counter = document.getElementById('counter');
   counter.setAttribute('role', 'status');
   counter.setAttribute('aria-live', 'polite');
 
-  // Accessibility: modal attributes
   var overlay = document.getElementById('modalOverlay');
   overlay.setAttribute('role', 'dialog');
   overlay.setAttribute('aria-modal', 'true');
   overlay.setAttribute('aria-labelledby', 'modalHeading');
   overlay.setAttribute('aria-hidden', 'true');
 
-  // Save button
   document.getElementById('saveBtn').addEventListener('click', function () {
     var val = document.getElementById('dateInput').value;
     if (!val) return;
@@ -128,17 +280,19 @@ function init() {
     startApp(val);
   });
 
-  // Edit button
   document.getElementById('editBtn').addEventListener('click', showModal);
 
-  // Toggle button
   document.getElementById('toggleBtn').addEventListener('click', function () {
     mode = mode === 'months' ? 'days' : 'months';
     var saved = loadStartDate();
-    if (saved) updateCounter(saved);
+    if (saved) { lastCounterNum = null; updateCounter(saved); }
   });
 
-  // Start or show modal
+  document.getElementById('pond').addEventListener('click', closeOpenEditor);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeOpenEditor();
+  });
+
   var startDateStr = loadStartDate();
   if (startDateStr) {
     startApp(startDateStr);

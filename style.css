@@ -2,13 +2,15 @@
 
 /* ── Variables ────────────────────────────── */
 :root {
-  --water:         #3d8fa0;
-  --water-deep:    #2e7a8f;
-  --water-ripple:  #6ab5c4;
-  --glass-bg:      rgba(255, 255, 255, 0.18);
-  --glass-border:  rgba(255, 255, 255, 0.30);
-  --modal-overlay: rgba(15, 23, 42, 0.70);
+  --water:         #1a6b7a;
+  --water-mid:     #0d5566;
+  --water-deep:    #0a3f4d;
+  --glass-bg:      rgba(6, 40, 48, 0.75);
+  --glass-border:  rgba(100, 200, 220, 0.3);
+  --teal-accent:   #7dd3e8;
+  --modal-overlay: rgba(4, 20, 28, 0.80);
   --text-white:    #ffffff;
+  --lily-green:    rgba(34, 160, 90, 0.55);
 }
 
 /* ── Reset ────────────────────────────────── */
@@ -38,27 +40,105 @@ img {
     repeating-linear-gradient(
       0deg,
       transparent,
-      transparent 7px,
-      rgba(0, 0, 0, 0.08) 8px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 7px,
-      rgba(0, 0, 0, 0.08) 8px
+      transparent 19px,
+      rgba(255, 255, 255, 0.03) 20px
     ),
     linear-gradient(
       180deg,
-      var(--water) 0%,
-      var(--water-deep) 50%,
-      var(--water) 100%
+      var(--water)     0%,
+      var(--water-mid) 30%,
+      var(--water-deep) 60%,
+      var(--water-mid) 100%
     );
-  animation: shimmer 4s ease-in-out infinite;
+  animation: shimmer 5s ease-in-out infinite;
 }
 
 @keyframes shimmer {
-  0%, 100% { background-position: 0 0, 0 0, 0 0; }
-  50%       { background-position: 0 16px, 16px 0, 0 0; }
+  0%, 100% { background-position: 0 0, 0 0; }
+  50%       { background-position: 0 20px, 0 0; }
+}
+
+/* ── Lily pads ────────────────────────────── */
+.lily-pad {
+  position: absolute;
+  width: 52px;
+  height: 32px;
+  background: var(--lily-green);
+  border-radius: 50% 50% 50% 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  animation: sway 4s ease-in-out infinite alternate;
+}
+.lily-pad--sm {
+  width: 36px;
+  height: 22px;
+  animation-duration: 5.5s;
+  animation-delay: -1.5s;
+}
+.lily-pad--lg {
+  width: 68px;
+  height: 42px;
+  animation-duration: 6s;
+  animation-delay: -3s;
+}
+.lily-pad:nth-child(odd)  { animation-delay: -2s; }
+.lily-pad:nth-child(even) { animation-delay: -0.8s; }
+
+.lily-flower {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, #fff9c4 40%, #fde68a 100%);
+  border-radius: 50%;
+  top: 4px;
+  right: 7px;
+  box-shadow: 0 0 6px rgba(253, 230, 138, 0.7);
+}
+
+/* ── Floating pond leaves ─────────────────── */
+.pond-leaf {
+  position: absolute;
+  width: 38px;
+  height: 18px;
+  background: rgba(40, 140, 75, 0.48);
+  border-radius: 50%;
+  transform: rotate(-20deg);
+  animation: sway 7s ease-in-out infinite alternate;
+  animation-delay: -3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.pond-leaf--sm {
+  width: 24px;
+  height: 12px;
+  animation-duration: 5s;
+  animation-delay: -1s;
+}
+
+/* ── Reeds ────────────────────────────────── */
+.reed-cluster {
+  position: absolute;
+}
+.reed {
+  position: absolute;
+  width: 4px;
+  background: linear-gradient(180deg, #5a8c52 0%, #3a6640 60%, #2d5230 100%);
+  border-radius: 2px 2px 0 0;
+  bottom: 0;
+}
+.reed::before {
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: 22px;
+  background: linear-gradient(180deg, #7a5230 0%, #5a3a1a 100%);
+  border-radius: 4px;
+}
+
+@keyframes sway {
+  from { transform: rotate(-2deg); }
+  to   { transform: rotate( 3deg); }
 }
 
 /* ── Duck zone ────────────────────────────── */
@@ -71,23 +151,172 @@ img {
 /* ── Duck ─────────────────────────────────── */
 .duck-wrapper {
   position: absolute;
-  animation: swim linear infinite;
+  animation: swim ease-in-out infinite alternate;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
+/* Flip layer — scaleX only, no animation of its own */
+.duck-flip {
+  transition: transform 0.25s ease;
+}
+.duck-flip.flipped {
+  transform: scaleX(-1);
+}
+
+/* Image layer — bob only, no transform from parent conflicts */
 .duck {
   width: 64px;
   height: 64px;
-  animation: bob ease-in-out 2s infinite;
+  opacity: 0.82;
+  animation: bob ease-in-out 2.5s infinite;
+  cursor: pointer;
+}
+
+/* ── Quack bubble ─────────────────────────── */
+.quack-bubble {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  color: #0a3f4d;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: quack-anim 1.6s ease forwards;
+  z-index: 20;
+}
+.quack-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: white;
+  border-bottom: none;
+}
+
+@keyframes quack-anim {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(6px) scale(0.7); }
+  15%  { opacity: 1; transform: translateX(-50%) translateY(0)   scale(1.05); }
+  25%  { transform: translateX(-50%) translateY(0) scale(1); }
+  75%  { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.9); }
+}
+
+/* ── Duck name badge ──────────────────────── */
+.duck-name-badge {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--glass-bg);
+  color: var(--teal-accent);
+  font-family: 'Fredoka', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  white-space: nowrap;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: background 150ms;
+}
+.duck-name-badge:hover {
+  background: rgba(6, 40, 48, 0.95);
+}
+
+/* ── Duck name editor ─────────────────────── */
+.duck-editor {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(4, 25, 33, 0.95);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  z-index: 30;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  white-space: nowrap;
+}
+.duck-editor.open { display: block; }
+.duck-editor label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(125,211,232,0.6);
+  margin-bottom: 5px;
+  font-family: 'Nunito', sans-serif;
+}
+.duck-editor input {
+  background: rgba(100, 200, 220, 0.1);
+  border: 1px solid var(--glass-border);
+  border-radius: 7px;
+  color: white;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  padding: 5px 10px;
+  width: 120px;
+  text-align: center;
+  outline: none;
+  display: block;
+}
+.duck-editor input:focus {
+  border-color: var(--teal-accent);
+}
+.duck-editor input::placeholder {
+  color: rgba(255,255,255,0.25);
+}
+
+.duck-ripple {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  animation: ripple-pulse 3s ease-out infinite;
+}
+
+.duck-ripple::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: ripple-pulse 3s ease-out infinite 0.6s;
+}
+
+@keyframes ripple-pulse {
+  0%   { opacity: 0.7; transform: translateX(-50%) scale(0.85); }
+  100% { opacity: 0;   transform: translateX(-50%) scale(1.5); }
 }
 
 @keyframes swim {
-  from { transform: translateX(110vw); }
-  to   { transform: translateX(-110vw); }
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(100vw - 72px)); }
 }
 
 @keyframes bob {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-4px); }
+}
+
+@keyframes duck-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Counter widget ───────────────────────── */
@@ -96,23 +325,24 @@ img {
   top: 16px;
   right: 16px;
   background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 2px solid var(--glass-border);
-  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 14px;
   padding: 14px 18px;
   color: var(--text-white);
   text-align: center;
-  min-width: 150px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  min-width: 155px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(100,200,220,0.1);
   z-index: 10;
 }
 
 .counter__label {
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  opacity: 0.8;
+  color: var(--teal-accent);
+  opacity: 0.75;
   margin-bottom: 4px;
 }
 
@@ -121,11 +351,22 @@ img {
   font-size: 36px;
   font-weight: 700;
   line-height: 1;
+  color: var(--teal-accent);
+}
+
+.counter__number.pop {
+  animation: num-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes num-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
 }
 
 .counter__unit {
-  font-size: 13px;
-  opacity: 0.9;
+  font-size: 12px;
+  color: rgba(125, 211, 232, 0.8);
   margin-bottom: 10px;
   min-height: 18px;
 }
@@ -133,16 +374,20 @@ img {
 .counter__toggle {
   display: block;
   width: 100%;
-  background: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(100, 200, 220, 0.12);
+  border: 1px solid rgba(100, 200, 220, 0.3);
   border-radius: 20px;
   padding: 4px 10px;
   font-size: 11px;
-  color: white;
+  color: var(--teal-accent);
   cursor: pointer;
   font-family: 'Nunito', sans-serif;
   margin-bottom: 8px;
-  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1), background 150ms;
+}
+
+.counter__toggle:hover {
+  background: rgba(100, 200, 220, 0.2);
 }
 
 .counter__toggle:active {
@@ -152,15 +397,16 @@ img {
 .counter__edit {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(125, 211, 232, 0.5);
   font-size: 11px;
   cursor: pointer;
   font-family: 'Nunito', sans-serif;
   padding: 2px 4px;
+  transition: color 150ms;
 }
 
 .counter__edit:hover {
-  color: var(--text-white);
+  color: var(--teal-accent);
 }
 
 /* ── Modal ────────────────────────────────── */
@@ -184,9 +430,9 @@ img {
 }
 
 .modal-card {
-  background: rgba(15, 23, 42, 0.92);
-  border: 2px solid var(--glass-border);
-  border-radius: 16px;
+  background: var(--glass-bg);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 18px;
   padding: 32px 28px;
   text-align: center;
   color: var(--text-white);
@@ -194,11 +440,12 @@ img {
   width: 90%;
   transform: scale(0.92);
   transition: transform 200ms ease-in;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(100,200,220,0.1);
 }
 
 .modal-overlay.is-visible .modal-card {
   transform: scale(1);
-  transition: transform 300ms ease-out;
+  transition: transform 300ms cubic-bezier(0.34, 1.2, 0.64, 1);
 }
 
 .modal-card__heading {
@@ -207,11 +454,12 @@ img {
   font-weight: 600;
   margin-bottom: 20px;
   line-height: 1.3;
+  color: var(--text-white);
 }
 
 .modal-card__input {
   width: 100%;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(100, 200, 220, 0.08);
   border: 1px solid var(--glass-border);
   border-radius: 8px;
   padding: 10px 12px;
@@ -221,6 +469,12 @@ img {
   margin-bottom: 16px;
   text-align: center;
   cursor: pointer;
+  transition: border-color 150ms;
+}
+
+.modal-card__input:focus {
+  outline: none;
+  border-color: var(--teal-accent);
 }
 
 .modal-card__input::-webkit-calendar-picker-indicator {
@@ -230,8 +484,8 @@ img {
 
 .modal-card__btn {
   width: 100%;
-  background: var(--water);
-  border: none;
+  background: linear-gradient(135deg, var(--water) 0%, var(--water-mid) 100%);
+  border: 1px solid rgba(100, 200, 220, 0.3);
   border-radius: 10px;
   padding: 12px;
   color: white;
@@ -239,26 +493,39 @@ img {
   font-weight: 600;
   font-family: 'Fredoka', sans-serif;
   cursor: pointer;
-  transition: background 150ms;
+  transition: filter 150ms, transform 100ms;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 .modal-card__btn:hover {
-  background: var(--water-deep);
+  filter: brightness(1.15);
+}
+
+.modal-card__btn:active {
+  transform: scale(0.98);
 }
 
 /* ── Reduced motion ───────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .pond { animation: none; }
-  .counter__toggle { transition: none; }
-  .modal-overlay, .modal-card { transition: none; }
+  .pond         { animation: none; }
+  .lily-pad     { animation: none; }
+  .pond-leaf    { animation: none; }
   .duck-wrapper { animation: none; }
+  .duck-flip    { transition: none; }
   .duck         { animation: none; }
+  .duck-ripple,
+  .duck-ripple::after { animation: none; }
+  .quack-bubble { animation: none; opacity: 1; }
+  .counter__toggle { transition: none; }
+  .counter__number { animation: none !important; }
+  .modal-overlay,
+  .modal-card   { transition: none; }
 }
 
 /* ── Responsive: small screens ────────────── */
 @media (max-width: 374px) {
   .counter {
-    min-width: 120px;
+    min-width: 125px;
     padding: 10px 12px;
     top: 8px;
     right: 8px;
