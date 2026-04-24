@@ -68,6 +68,41 @@
     </div>
   </div>
 
+  <!-- Dashboard panel -->
+  <div class="dashboard" id="dashboard" role="dialog" aria-label="Stats dashboard" aria-hidden="true">
+    <div class="dashboard__header">
+      <span class="dashboard__title">Our Story 🐥</span>
+      <button class="dashboard__close" id="dashboardClose" aria-label="Close dashboard">×</button>
+    </div>
+    <div class="dashboard__content">
+      <div class="dashboard__stats-grid">
+        <div class="dashboard__stat">
+          <div class="dashboard__stat-label">Days Together</div>
+          <div class="dashboard__stat-value" id="dashStat-days">—</div>
+        </div>
+        <div class="dashboard__stat">
+          <div class="dashboard__stat-label">Months Together</div>
+          <div class="dashboard__stat-value dashboard__stat-value--sm" id="dashStat-months">—</div>
+        </div>
+        <div class="dashboard__stat">
+          <div class="dashboard__stat-label">Ducks Swimming</div>
+          <div class="dashboard__stat-value" id="dashStat-ducks">—</div>
+        </div>
+        <div class="dashboard__stat">
+          <div class="dashboard__stat-label">Next Duck</div>
+          <div class="dashboard__stat-value dashboard__stat-value--sm" id="dashStat-next">—</div>
+        </div>
+      </div>
+      <div class="dashboard__duck-section">
+        <div class="dashboard__duck-header" id="dashStat-named-header">— ducks named</div>
+        <div class="dashboard__duck-list" id="dashStat-duck-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating dashboard trigger -->
+  <button class="dashboard-btn" id="dashboardBtn" aria-label="Open stats dashboard">🦆</button>
+
   <script src="logic.js"></script>
   <script src="app.js"></script>
 </body>
