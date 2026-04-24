@@ -2,7 +2,7 @@
 'use strict';
 
 const assert = require('assert');
-const { calcTotalDays, calcMonths, calcLeftoverDays, getDuckCount } = require('../logic.js');
+const { calcTotalDays, calcMonths, calcLeftoverDays, getDuckCount, calcDaysUntilNextDuck } = require('../logic.js');
 
 let passed = 0;
 let failed = 0;
@@ -139,6 +139,24 @@ test('caps at 30 for 35 months ago', () => {
 
 test('returns 1 for a future date', () => {
   assert.strictEqual(getDuckCount(daysAgo(-10)), 1);
+});
+
+// ── calcDaysUntilNextDuck ─────────────────────────────────────────────────────
+
+console.log('\ncalcDaysUntilNextDuck');
+
+test('returns 0 when duck count is at max (30 ducks)', () => {
+  assert.strictEqual(calcDaysUntilNextDuck(exactMonthsAgo(35)), 0);
+});
+
+test('returns positive integer when not at max', () => {
+  const result = calcDaysUntilNextDuck(exactMonthsAgo(1));
+  assert.ok(result > 0, 'expected positive days, got ' + result);
+});
+
+test('returns at most 31 (never more than one month away)', () => {
+  const result = calcDaysUntilNextDuck(daysAgo(0));
+  assert.ok(result <= 31, 'expected <= 31 days, got ' + result);
 });
 
 // ── Results ───────────────────────────────────────────────────────────────────
